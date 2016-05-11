@@ -1,6 +1,9 @@
 import csv
 
+import numpy
+
 replacements_dict = []
+
 
 def change_symbolic_data_for_learning(input_file, output_file):
     """For machine learning needed change symbolic input data.
@@ -36,12 +39,10 @@ def cut_test_data():
         for line in infile:
             lines.append(line)
     with open('cut_data.txt', 'w') as outfile:
-        index = 0
-        while index < 1000:
-            outfile.write(lines[index])
-            index+=1
+        for line in lines:
+            outfile.write(line)
 
-    # write_formatted_data(cut_lines, '../input/cut_data.txt')
+            # write_formatted_data(cut_lines, '../input/cut_data.txt')
 
 
 def create_replacements_dictionary(file_name):
@@ -77,15 +78,57 @@ def create_replacements_dictionary(file_name):
                 for number in encoded_attack:
                     row.append(number)
             formatted_lines.append(row)
-    write_formatted_data(formatted_lines, '../output/formatted_data.txt')
+    write_formatted_data(formatted_lines, '../input/formatted_data.txt')
     replacements_dict.append(protocol_types)
     replacements_dict.append(services)
     replacements_dict.append(flags)
     print replacements_dict
 
 
+def create_training_input_data(input_file, output_file):
+    training_normal_inputs = []
+    training_dos_inputs = []
+    training_u2r_inputs = []
+    training_r2l_inputs = []
+    training_probe_inputs = []
+    with open(input_file, 'rb') as f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            attack = row[41:46]
+            if attack == ['0', '0', '0', '0', '1'] and len(training_normal_inputs) != 1500:
+                training_normal_inputs.append(row)
+            if attack == ['1', '0', '0', '0', '0'] and len(training_dos_inputs) != 3571:
+                training_dos_inputs.append(row)
+            if attack == ['0', '1', '0', '0', '0'] and len(training_u2r_inputs) != 37:
+                training_u2r_inputs.append(row)
+            if attack == ['0', '0', '1', '0', '0'] and len(training_r2l_inputs) != 278:
+                training_r2l_inputs.append(row)
+            if attack == ['0', '0', '0', '1', '0'] and len(training_probe_inputs) != 800:
+                training_probe_inputs.append(row)
+        print len(training_normal_inputs)
+        # training_inputs = [training_normal_inputs, training_r2l_inputs, training_dos_inputs, training_u2r_inputs,
+        #                     training_probe_inputs]
+        # training_inputs.append(dict(training_normal_inputs))
+        # training_inputs = [training_probe_inputs]
+        # print len(training_inputs)
+        add_training_data(training_normal_inputs, output_file)
+        add_training_data(training_probe_inputs, output_file)
+        add_training_data(training_dos_inputs, output_file)
+        add_training_data(training_r2l_inputs, output_file)
+        add_training_data(training_u2r_inputs, output_file)
+
+
+def add_training_data(inputs, file):
+    with open(file, 'ab') as outfile:
+        wtr = csv.writer(outfile)
+        wtr.writerows(inputs)
+
+
 # create_replacements_dictionary('../input/kddcup.txt')
-cut_test_data()
+# create_training_input_data('../input/formatted_data.txt', '../input/training_inputs.txt')
+
+
+# cut_test_data()
 
 
 def normalize():
