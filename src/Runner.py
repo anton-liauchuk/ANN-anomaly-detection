@@ -17,16 +17,16 @@ test_results = {(1, 0, 0, 0, 0): [0, 0, 0],
                 (0, 0, 0, 1, 0): [0, 0, 0],
                 (0, 0, 0, 0, 1): [0, 0, 0]}
 
-
-def compare_output_and_attack(input_file, output_file):
-    with open('../input/formatted_data.txt', 'rb') as f:
-        reader = csv.reader(f, delimiter=',')
-        for row in reader:
-            result_network = net.activate(row[0:40])
-            attack = row[41:46]
-            if attack != ['0', '0', '0', '0', '1']:
-                result_network
-                # add check for detect atack or no
+#
+# def compare_output_and_attack(input_file, output_file):
+#     with open('../input/formatted_data.txt', 'rb') as f:
+#         reader = csv.reader(f, delimiter=',')
+#         for row in reader:
+#             result_network = net.activate(row[0:40])
+#             attack = row[41:46]
+#             if attack != ['0', '0', '0', '0', '1']:
+#                 result_network
+#                 # add check for detect atack or no
 
 
 # add check for needed_atack or no
@@ -40,9 +40,9 @@ def test_compare():
             input_parameters = row[0:41]
             # print map(float, input_parameters)
             result_network = net.activate(map(float, input_parameters))
-            low_values_indices = input < np.max(result_network)
+            low_values_indices = result_network < np.max(result_network)
             result_network[low_values_indices] = 0
-            result_network[np.amax(result_network)] = 1
+            result_network[result_network.argmax()] = 1
             if attack == [0, 0, 0, 0, 1]:
                 if map(int, result_network.tolist()) == attack:
                     test_results[tuple(attack)][1] += 1
