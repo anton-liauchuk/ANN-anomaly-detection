@@ -34,7 +34,7 @@ class AnomalyDetectionNetwork:
         return ds
 
     @staticmethod
-    def build_network():
+    def build_model_rnn_mlp():
         network = buildNetwork(INP, 12, 10, TARGET, bias=True, outclass=SoftSignLayer, recurrent=True)
         reccon = FullConnection(network['hidden0'], network['in'])
         network.addRecurrentConnection(reccon)
@@ -50,3 +50,20 @@ class AnomalyDetectionNetwork:
         NetworkWriter.writeToFile(network, '../models/model_1.xml')
         print network.activate([0, 1, 11, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 4, 0.00, 0.00, 0.00, 0.00, 0.12,
                 0.09, 0.00, 255, 48, 0.19, 0.20, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00])
+
+    @staticmethod
+    def build_model_mlp_for_attack():
+        print 'model_2'
+
+    @staticmethod
+    def build_model_expert():
+        print 'model_3'
+
+    def write_model(output_file):
+        print 'write'
+
+    def read_model(input_file):
+        print 'read'
+
+
+

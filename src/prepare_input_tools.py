@@ -131,5 +131,13 @@ def add_training_data(inputs, file):
 # cut_test_data()
 
 
-def normalize():
+def normalize_data(input_file, output_file):
     """Normalizing data"""
+
+
+def change_symbolic_data(input_file, output_file):
+    print 'change'
+
+
+def cut_learning_data(input_file, output_file):
+    print 'cut'
