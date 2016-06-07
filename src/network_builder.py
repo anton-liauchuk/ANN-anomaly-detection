@@ -10,7 +10,8 @@ from pybrain.datasets import SupervisedDataSet
 
 INP = 41
 TARGET = 5
-MAX_EPOCHS = 500
+TRAIN_EPOCHS = 1000
+RETRAIN_EPOCHS = 100
 
 
 class AnomalyDetectionNetwork:
@@ -20,37 +21,22 @@ class AnomalyDetectionNetwork:
     @staticmethod
     def read_records_kdd():
         ds = SupervisedDataSet(INP, TARGET)
-        index = 0
-        # with open('../input/formatted_data.txt') as f:
-        #     fdata = [line.rstrip() for line in f]
-        # while index < 6000:
-        #     array = fdata[index].replace('.\n', '')
-        #     records = array.rsplit(',')
-        #     ds.addSample(records[:INP], records[INP:46])
-        #     index += 1
-        with open('../input/training_inputs.txt', 'rb') as f:
+        with open('../input/norm.txt', 'rb') as f:
             reader = csv.reader(f, delimiter=',')
             for row in reader:
                 ds.addSample(row[:INP], row[INP:46])
         return ds
 
     @staticmethod
-    def build_model_rnn_mlp():
+    def build_model_1():
         network = buildNetwork(INP, 12, 10, TARGET, bias=True, outclass=SoftSignLayer, recurrent=True)
         reccon = FullConnection(network['hidden0'], network['in'])
         network.addRecurrentConnection(reccon)
         network.sortModules()
         ds = AnomalyDetectionNetwork.read_records_kdd()
-        # trainer = BackpropTrainer(network, ds, learningrate=0.02, momentum=0.88)
         trainer = BackpropTrainer(network, ds)
-        # trainer.trainUntilConvergence()
-        for i in range(MAX_EPOCHS):
-            print "Progress: %d/%d \r" % (i, MAX_EPOCHS)
-            # sys.stdout.flush()
-            trainer.train()
+        trainer.trainUntilConvergence(maxEpochs=TRAIN_EPOCHS, verbose=True)
         NetworkWriter.writeToFile(network, '../models/model_1.xml')
-        print network.activate([0, 1, 11, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 4, 0.00, 0.00, 0.00, 0.00, 0.12,
-                0.09, 0.00, 255, 48, 0.19, 0.20, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00])
 
     @staticmethod
     def build_model_2():
@@ -59,39 +45,23 @@ class AnomalyDetectionNetwork:
         network.addRecurrentConnection(reccon)
         network.sortModules()
         ds = AnomalyDetectionNetwork.read_records_kdd()
-        # trainer = BackpropTrainer(network, ds, learningrate=0.02, momentum=0.88)
         trainer = BackpropTrainer(network, ds)
-        # trainer.trainUntilConvergence()
-        for i in range(MAX_EPOCHS):
-            print "Progress: %d/%d \r" % (i, MAX_EPOCHS)
-            # sys.stdout.flush()
-            trainer.train()
         NetworkWriter.writeToFile(network, '../models/model_2.xml')
-        print network.activate(
-            [0, 1, 11, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 4, 0.00, 0.00, 0.00, 0.00, 0.12,
-             0.09, 0.00, 255, 48, 0.19, 0.20, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00])
-
 
     @staticmethod
     def retrain_model_1():
         network = NetworkReader.readFrom('../models/model_1.xml')
         ds = AnomalyDetectionNetwork.read_records_kdd()
-        # trainer = BackpropTrainer(network, ds, learningrate=0.02, momentum=0.88)
         trainer = BackpropTrainer(network, ds)
-        # trainer.trainUntilConvergence()
-        for i in range(MAX_EPOCHS):
-            print "Progress: %d/%d \r" % (i, MAX_EPOCHS)
-            # sys.stdout.flush()
-            trainer.train()
-        NetworkWriter.writeToFile(network, '../models/new_model_1.xml')
-
+        trainer.trainUntilConvergence(maxEpochs=RETRAIN_EPOCHS, verbose=True)
+        NetworkWriter.writeToFile(network, '../models/model_1_new.xml')
 
     @staticmethod
-    def build_model_mlp_for_attack():
+    def build_model_2():
         print 'model_2'
 
     @staticmethod
-    def build_model_expert():
+    def build_model_3():
         print 'model_3'
 
     def write_model(output_file):
@@ -99,6 +69,3 @@ class AnomalyDetectionNetwork:
 
     def read_model(input_file):
         print 'read'
-
-
-

@@ -1,6 +1,6 @@
 import csv
 
-import numpy
+import numpy as np
 
 replacements_dict = []
 training_attack_types = '../input/training_attack_types.txt'
@@ -121,4 +121,13 @@ def add_training_data(inputs, file):
 
 def normalize_data(input_file, output_file):
     """Normalizing data"""
+    formatted_lines = []
+    with open(input_file, 'rb') as f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            vet = np.array(map(float, row[:41]))
+            norm = [float(i) / sum(vet) for i in vet]
+            norm.extend([int(numeric_string) for numeric_string in row[41:46]])
+            formatted_lines.append(norm)
+    write_formatted_data(formatted_lines, output_file)
     print 'implement in feature'
