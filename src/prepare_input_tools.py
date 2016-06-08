@@ -80,6 +80,17 @@ def cut_learning_data(input_file, output_file):
         add_training_data(training_u2r_inputs, output_file)
 
 
+def cut_dos_set(input_file, output_file):
+    training_dos_inputs = []
+    with open(input_file, 'rb') as f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            attack = row[41:46]
+            if attack == ['1', '0', '0', '0', '0']:
+                training_dos_inputs.append(row)
+    add_training_data(training_dos_inputs, output_file)
+
+
 def find_attack_encoding(input_file, type_attack):
     with open(input_file, 'rb') as f:
         reader = csv.reader(f, delimiter=' ')
@@ -131,3 +142,5 @@ def normalize_data(input_file, output_file):
             formatted_lines.append(norm)
     write_formatted_data(formatted_lines, output_file)
     print 'implement in feature'
+
+normalize_data('../input/formatted_training.txt', '../input/normalize_training.txt')

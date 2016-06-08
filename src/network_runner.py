@@ -6,10 +6,9 @@ from network_builder import AnomalyDetectionNetwork
 
 # from prepare_input_tools import change_attack_names_for_learning
 
-# AnomalyDetectionNetwork.read_records_kdd()
+# AnomalyDetectionNetwork.read_training_set()
 # change_attack_names_for_learning()
 # AnomalyDetectionNetwork.build_model_rnn_mlp()
-from prepare_input_tools import normalize_data
 
 test_results = {(1, 0, 0, 0, 0): [0, 0, 0],
                 (0, 1, 0, 0, 0): [0, 0, 0],
@@ -67,8 +66,10 @@ def format_output(output):
 
 
 # net = NetworkReader.readFrom('../models/model_1.xml')
-test_compare('../input/formatted_test.txt', '../models/model_1.xml', '../results/check_model_1.txt')
+
 # AnomalyDetectionNetwork.build_model_2()
 # normalize_data('../input/formatted_data.txt', '../normalize_resources/normalize_data.txt')
 # AnomalyDetectionNetwork.build_model_rnn_mlp()
-# AnomalyDetectionNetwork.retrain_model_1()
+AnomalyDetectionNetwork.build_model_3()
+test_compare('../input/formatted_test.txt', '../models/model_3.xml', '../results/model_3.txt')
+# cut_dos_training_set('../input/formatted_test.txt', '../input/dos_training_set.txt')
