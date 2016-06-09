@@ -1,3 +1,4 @@
+import time
 from pybrain.tools.customxml import NetworkReader
 import numpy as np
 import csv
@@ -70,6 +71,9 @@ def format_output(output):
 # AnomalyDetectionNetwork.build_model_2()
 # normalize_data('../input/formatted_data.txt', '../normalize_resources/normalize_data.txt')
 # AnomalyDetectionNetwork.build_model_rnn_mlp()
-AnomalyDetectionNetwork.build_model_3()
-test_compare('../input/formatted_test.txt', '../models/model_3.xml', '../results/model_3.txt')
+# AnomalyDetectionNetwork.build_model_3()
+start_time = time.time()
+AnomalyDetectionNetwork.retrain_model_1()
+test_compare('../input/formatted_test.txt', '../models/model_5.xml', '../results/model_5.txt')
+print time.time() - start_time, "minutes"
 # cut_dos_training_set('../input/formatted_test.txt', '../input/dos_training_set.txt')

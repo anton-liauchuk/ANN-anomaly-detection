@@ -10,8 +10,8 @@ from pybrain.datasets import SupervisedDataSet
 
 INP = 41
 TARGET = 5
-TRAIN_EPOCHS = 1000
-RETRAIN_EPOCHS = 50
+TRAIN_EPOCHS = 3000
+RETRAIN_EPOCHS = 60
 
 
 class AnomalyDetectionNetwork:
@@ -50,11 +50,12 @@ class AnomalyDetectionNetwork:
 
     @staticmethod
     def retrain_model_1():
-        network = NetworkReader.readFrom('../models/model_1.xml')
-        ds = AnomalyDetectionNetwork.read_training_set('../dos_module_builder/dos_normalize_training.txt')
-        trainer = BackpropTrainer(network, ds)
-        trainer.trainUntilConvergence(maxEpochs=RETRAIN_EPOCHS, verbose=True)
-        NetworkWriter.writeToFile(network, '../models/model_3.xml')
+        network = NetworkReader.readFrom('../models/model_5.xml')
+        ds = AnomalyDetectionNetwork.read_training_set('../input/normalize_training.txt')
+        normalize_test = AnomalyDetectionNetwork.read_training_set('../input/normalize_test.txt')
+        trainer = BackpropTrainer(network)
+        trainer.trainUntilConvergence(maxEpochs=RETRAIN_EPOCHS, verbose=True, trainingData=ds, validationData=normalize_test)
+        NetworkWriter.writeToFile(network, '../models/model_5.xml')
 
     @staticmethod
     def build_model_2():
