@@ -44,22 +44,20 @@ class AnomalyDetectionNetwork:
         reccon = FullConnection(network['hidden0'], network['in'])
         network.addRecurrentConnection(reccon)
         network.sortModules()
-        ds = AnomalyDetectionNetwork.read_training_set('../input/norm.txt')
-        trainer = BackpropTrainer(network, ds)
+        ds = AnomalyDetectionNetwork.read_training_set('../input/normalize_training.txt')
+        normalize_test = AnomalyDetectionNetwork.read_training_set('../input/normalize_test.txt')
+        trainer = BackpropTrainer(network, learningrate=0.1)
+        trainer.trainUntilConvergence(maxEpochs=RETRAIN_EPOCHS, verbose=True, trainingData=ds, validationData=normalize_test)
         NetworkWriter.writeToFile(network, '../models/model_2.xml')
 
     @staticmethod
     def retrain_model_1():
-        network = NetworkReader.readFrom('../models/model_5.xml')
+        network = NetworkReader.readFrom('../models/model_2.xml')
         ds = AnomalyDetectionNetwork.read_training_set('../input/normalize_training.txt')
         normalize_test = AnomalyDetectionNetwork.read_training_set('../input/normalize_test.txt')
-        trainer = BackpropTrainer(network)
+        trainer = BackpropTrainer(network, learningrate=0.1)
         trainer.trainUntilConvergence(maxEpochs=RETRAIN_EPOCHS, verbose=True, trainingData=ds, validationData=normalize_test)
-        NetworkWriter.writeToFile(network, '../models/model_5.xml')
-
-    @staticmethod
-    def build_model_2():
-        print 'model_2'
+        NetworkWriter.writeToFile(network, '../models/model_2_new.xml')
 
     @staticmethod
     def build_model_3():
