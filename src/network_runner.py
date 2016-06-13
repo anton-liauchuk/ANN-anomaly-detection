@@ -73,7 +73,8 @@ def format_output(output):
 # AnomalyDetectionNetwork.build_model_rnn_mlp()
 # AnomalyDetectionNetwork.build_model_3()
 start_time = time.time()
+# AnomalyDetectionNetwork.build_model_3()
 AnomalyDetectionNetwork.retrain_model_1()
-test_compare('../input/formatted_test.txt', '../models/model_2_new.xml', '../results/model_2_new.txt')
+test_compare('../input/formatted_test.txt', '../models/model_6_new.xml', '../results/model_6_new.txt')
 print time.time() - start_time, "minutes"
 # cut_dos_training_set('../input/formatted_test.txt', '../input/dos_training_set.txt')
